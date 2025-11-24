@@ -1,0 +1,37 @@
+﻿@model IEnumerable<CDM.Database.Models.ChargeTrimestreSousCopro>
+
+@{
+    ViewData["Title"] = "Associations Charges / Sous-copropriétés";
+}
+
+<h1>Associations Charges ↔ Sous-copropriétés</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Ajouter une association</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Charge</th>
+            <th>Sous-copropriété</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var c in Model)
+{
+        <tr>
+            <td>@c.ChargeTrimestre.Libelle</td>
+            <td>@c.SousCopropriete.Nom</td>
+            <td>
+                <a asp-action="Delete"
+                   asp-route-chargeTrimestreId="@c.ChargeTrimestreId"
+                   asp-route-sousCoproprieteId="@c.SousCoproprieteId">
+                   Supprimer
+                </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

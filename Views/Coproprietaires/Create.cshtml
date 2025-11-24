@@ -1,0 +1,24 @@
+@model CDM.Database.Models.Coproprietaire
+
+@{
+    ViewData["Title"] = "Ajouter un copropriétaire";
+}
+
+<h1>Ajouter un copropriétaire</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Nom"></label>
+        <input asp-for="Nom" class="form-control"/>
+        <span asp-validation-for="Nom" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control"/>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Créer</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
+</form>

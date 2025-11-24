@@ -1,0 +1,40 @@
+@model CDM.Database.Models.ChargeTrimestre
+
+@{
+    ViewData["Title"] = "Modifier une charge";
+}
+
+<h1>Modifier une charge</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id"/>
+
+    <div class="form-group">
+        <label asp-for="Libelle"></label>
+        <input asp-for="Libelle" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MontantPrevisionnel"></label>
+        <input asp-for="MontantPrevisionnel" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MontantReel"></label>
+        <input asp-for="MontantReel" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Trimestre</label>
+        <select asp-for="TrimestreId" asp-items="ViewBag.TrimestreId" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Sous-copropriétés</label>
+        <select asp-for="SousCopros" asp-items="ViewBag.SousCopros" class="form-control" multiple>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
+</form>

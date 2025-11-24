@@ -1,0 +1,26 @@
+@model CDM.Database.Models.Coproprietaire
+
+@{
+    ViewData["Title"] = "Modifier le copropriétaire";
+}
+
+<h1>Modifier le copropriétaire</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Nom"></label>
+        <input asp-for="Nom" class="form-control"/>
+        <span asp-validation-for="Nom" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control"/>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
+</form>

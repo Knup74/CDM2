@@ -1,0 +1,20 @@
+@model CDM.Database.Models.SousCopropriete
+
+@{
+    ViewData["Title"] = "Modifier la sous-copropriété";
+}
+
+<h1>Modifier la sous-copropriété</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id"/>
+
+    <div class="form-group">
+        <label asp-for="Nom"></label>
+        <input asp-for="Nom" class="form-control"/>
+        <span asp-validation-for="Nom" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary mt-3" type="submit">Enregistrer</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
+</form>

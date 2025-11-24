@@ -1,0 +1,41 @@
+﻿@model IEnumerable<CDM.Database.Models.Trimestre>
+
+@{
+    ViewData["Title"] = "Trimestres";
+}
+
+<h1>Trimestres</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Créer un trimestre</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Année</th>
+            <th>Numéro</th>
+            <th>Total prévisionnel</th>
+            <th>Total réel</th>
+            <th>Validé</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Annee</td>
+            <td>@item.Numero</td>
+            <td>@string.Format("{0:N2} €", item.TotalPrevisionnel)</td>
+            <td>@string.Format("{0:N2} €", item.TotalReel)</td>
+            <td>@(item.EstValide ? "Oui" : "Non")</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Détails</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">Modifier</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Supprimer</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

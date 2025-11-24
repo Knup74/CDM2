@@ -1,0 +1,37 @@
+﻿@model IEnumerable<CDM.Database.Models.Coproprietaire>
+
+@{
+    ViewData["Title"] = "Copropriétaires";
+}
+
+<h1>Copropriétaires</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Ajouter un copropriétaire</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Lots</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Nom</td>
+                <td>@c.Email</td>
+                <td>@(c.Lots?.Count ?? 0)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@c.Id">Détails</a> |
+                    <a asp-action="Edit" asp-route-id="@c.Id">Modifier</a> |
+                    <a asp-action="Delete" asp-route-id="@c.Id">Supprimer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

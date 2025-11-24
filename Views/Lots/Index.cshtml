@@ -1,0 +1,39 @@
+﻿@model IEnumerable<CDM.Database.Models.Lot>
+
+@{
+    ViewData["Title"] = "Lots";
+}
+
+<h1>Lots</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Ajouter un lot</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Numéro</th>
+            <th>Tantièmes</th>
+            <th>Copropriétaire</th>
+            <th>Sous-Copropriété</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var l in Model)
+{
+        <tr>
+            <td>@l.NumeroLot</td>
+            <td>@l.Tantiemes</td>
+            <td>@l.Coproprietaire?.Nom</td>
+            <td>@l.SousCopropriete?.Nom</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@l.Id">Détails</a> |
+                <a asp-action="Edit" asp-route-id="@l.Id">Modifier</a> |
+                <a asp-action="Delete" asp-route-id="@l.Id">Supprimer</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

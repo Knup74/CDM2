@@ -1,0 +1,23 @@
+@model CDM.Database.Models.ChargeTrimestreSousCopro
+
+@{
+    ViewData["Title"] = "Supprimer une association";
+}
+
+<h1>Supprimer cette association</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Charge</dt>
+    <dd class="col-sm-9">@Model.ChargeTrimestre.Libelle</dd>
+
+    <dt class="col-sm-3">Sous-copropriété</dt>
+    <dd class="col-sm-9">@Model.SousCopropriete.Nom</dd>
+</dl>
+
+<form asp-action="DeleteConfirmed">
+    <input type="hidden" name="chargeTrimestreId" value="@Model.ChargeTrimestreId" />
+    <input type="hidden" name="sousCoproprieteId" value="@Model.SousCoproprieteId" />
+
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+</form>

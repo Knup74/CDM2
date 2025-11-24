@@ -1,0 +1,49 @@
+@model CDM.Database.Models.Coproprietaire
+
+@{
+    ViewData["Title"] = "Détails du copropriétaire";
+}
+
+<h1>Détails du copropriétaire</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">Nom</dt>
+        <dd class="col-sm-9">@Model.Nom</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+    </dl>
+</div>
+
+<h3>Lots associés</h3>
+
+@if (Model.Lots != null && Model.Lots.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Tantièmes</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var lot in Model.Lots)
+        {
+            <tr>
+                <td>@lot.NumeroLot</td>
+                <td>@lot.Tantiemes</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Aucun lot associé.</p>
+}
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
+    <a asp-action="Index" class="btn btn-secondary">Retour</a>
+</p>

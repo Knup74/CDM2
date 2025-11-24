@@ -1,0 +1,43 @@
+﻿@model IEnumerable<CDM.Database.Models.ChargeTrimestre>
+
+@{
+    ViewData["Title"] = "Charges Trimestrielles";
+}
+
+<h1>Charges trimestrielles</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Ajouter une charge</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Libellé</th>
+            <th>Trimestre</th>
+            <th>Prévisionnel</th>
+            <th>Réel</th>
+            <th>Sous-copropriétés</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var c in Model)
+{
+        <tr>
+            <td>@c.Libelle</td>
+            <td>@($"{c.Trimestre.Annee} - T{c.Trimestre.Numero}")</td>
+            <td>@c.MontantPrevisionnel €</td>
+            <td>@c.MontantReel €</td>
+            <td>
+                @string.Join(", ", c.SousCopros.Select(s => s.SousCopropriete.Nom))
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@c.Id">Détails</a> |
+                <a asp-action="Edit" asp-route-id="@c.Id">Modifier</a> |
+                <a asp-action="Delete" asp-route-id="@c.Id">Supprimer</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

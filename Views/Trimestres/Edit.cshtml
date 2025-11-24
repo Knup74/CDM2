@@ -1,0 +1,43 @@
+@model CDM.Database.Models.Trimestre
+
+@{
+    ViewData["Title"] = "Modifier un trimestre";
+}
+
+<h1>Modifier un trimestre</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Annee"></label>
+        <input asp-for="Annee" class="form-control" />
+        <span asp-validation-for="Annee" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Numero"></label>
+        <input asp-for="Numero" class="form-control" />
+        <span asp-validation-for="Numero" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TotalPrevisionnel"></label>
+        <input asp-for="TotalPrevisionnel" class="form-control" />
+        <span asp-validation-for="TotalPrevisionnel" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TotalReel"></label>
+        <input asp-for="TotalReel" class="form-control" />
+        <span asp-validation-for="TotalReel" class="text-danger"></span>
+    </div>
+    <div class="form-check mt-2">
+        <input asp-for="EstValide" class="form-check-input" />
+        <label asp-for="EstValide" class="form-check-label"></label>
+    </div>
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

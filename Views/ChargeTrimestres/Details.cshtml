@@ -1,0 +1,31 @@
+@model CDM.Database.Models.ChargeTrimestre
+
+@{
+    ViewData["Title"] = "Détails de la charge";
+}
+
+<h1>Détails</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Libellé</dt>
+    <dd class="col-sm-9">@Model.Libelle</dd>
+
+    <dt class="col-sm-3">Trimestre</dt>
+    <dd class="col-sm-9">@($"{Model.Trimestre.Annee} - T{Model.Trimestre.Numero}")</dd>
+
+    <dt class="col-sm-3">Montant prévisionnel</dt>
+    <dd class="col-sm-9">@Model.MontantPrevisionnel €</dd>
+
+    <dt class="col-sm-3">Montant réel</dt>
+    <dd class="col-sm-9">@Model.MontantReel €</dd>
+
+    <dt class="col-sm-3">Sous-copropriétés</dt>
+    <dd class="col-sm-9">
+        @string.Join(", ", Model.SousCopros.Select(s => s.SousCopropriete.Nom))
+    </dd>
+</dl>
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
+    <a asp-action="Index" class="btn btn-secondary">Retour</a>
+</p>

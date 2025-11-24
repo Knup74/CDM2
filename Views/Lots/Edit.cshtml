@@ -1,0 +1,36 @@
+@model CDM.Database.Models.Lot
+
+@{
+    ViewData["Title"] = "Modifier un lot";
+}
+
+<h1>Modifier un lot</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="NumeroLot"></label>
+        <input asp-for="NumeroLot" class="form-control"/>
+        <span asp-validation-for="NumeroLot" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Tantiemes"></label>
+        <input asp-for="Tantiemes" class="form-control"/>
+        <span asp-validation-for="Tantiemes" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Copropriétaire</label>
+        <select asp-for="CoproprietaireId" asp-items="ViewBag.CoproprietaireId" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Sous-copropriété</label>
+        <select asp-for="SousCoproprieteId" asp-items="ViewBag.SousCoproprieteId" class="form-control"></select>
+    </div>
+
+    <button class="btn btn-primary mt-3" type="submit">Enregistrer</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
+</form>

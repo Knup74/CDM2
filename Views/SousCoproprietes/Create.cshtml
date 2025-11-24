@@ -1,0 +1,18 @@
+@model CDM.Database.Models.SousCopropriete
+
+@{
+    ViewData["Title"] = "Créer une sous-copropriété";
+}
+
+<h1>Créer une sous-copropriété</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Nom"></label>
+        <input asp-for="Nom" class="form-control"/>
+        <span asp-validation-for="Nom" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary mt-3" type="submit">Créer</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
+</form>

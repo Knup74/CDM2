@@ -1,0 +1,21 @@
+@model CDM.Database.Models.Lot
+
+@{
+    ViewData["Title"] = "Supprimer un lot";
+}
+
+<h1>Supprimer ce lot</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Numéro</dt>
+    <dd class="col-sm-9">@Model.NumeroLot</dd>
+
+    <dt class="col-sm-3">Tantièmes</dt>
+    <dd class="col-sm-9">@Model.Tantiemes</dd>
+</dl>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger">Supprimer</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+</form>

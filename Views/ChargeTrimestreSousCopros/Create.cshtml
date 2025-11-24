@@ -1,0 +1,26 @@
+@model CDM.Database.Models.ChargeTrimestreSousCopro
+
+@{
+    ViewData["Title"] = "Créer un lien Charge/Sous-copropriété";
+}
+
+<h1>Créer une association</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label>Charge</label>
+        <select asp-for="ChargeTrimestreId"
+                asp-items="ViewBag.ChargeTrimestreId"
+                class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Sous-copropriété</label>
+        <select asp-for="SousCoproprieteId"
+                asp-items="ViewBag.SousCoproprieteId"
+                class="form-control"></select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Créer</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
+</form>

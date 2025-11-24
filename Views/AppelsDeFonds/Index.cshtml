@@ -1,0 +1,41 @@
+﻿@model IEnumerable<CDM.Database.Models.AppelDeFond>
+
+@{
+    ViewData["Title"] = "Appels de fonds";
+}
+
+<h1>Appels de fonds</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Créer un appel de fond</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Trimestre</th>
+            <th>Copropriétaire</th>
+            <th>Montant dû</th>
+            <th>Montant réglé</th>
+            <th>Régularisation</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Trimestre.Annee - T@item.Trimestre.Numero</td>
+        <td>@item.Coproprietaire.Nom</td>
+        <td>@item.MontantDu €</td>
+        <td>@item.MontantRegle €</td>
+        <td>@item.Regularisation €</td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.Id">Modifier</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Détails</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Supprimer</a>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>
