@@ -19,7 +19,7 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Publish .NET app
-      run: dotnet publish -c Release -o out
+      run: dotnet publish -c Release -o ./publish
 
     - name: Copy files to server via SSH
       uses: appleboy/scp-action@v0.1.6
@@ -27,7 +27,7 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
-        source: "out/."
+        source: "publish/*"
         target: "/var/www/CDM"
 
     - name: Restart app on server
