@@ -13,3 +13,6 @@ obj/
 
 # Database
 *.db
+Database/app.db
+Database/app.db-shm
+Database/app.db-wal
