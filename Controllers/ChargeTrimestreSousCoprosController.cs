@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CDM.Database;
 using CDM.Database.Models;
@@ -15,86 +14,93 @@ namespace CDM.Controllers
             _context = context;
         }
 
-        // GET: ChargeTrimestreSousCopros
+        // INDEX
         public async Task<IActionResult> Index()
         {
             var list = await _context.ChargeTrimestreSousCopros
                 .Include(c => c.ChargeTrimestre)
                 .Include(c => c.SousCopropriete)
-                .AsNoTracking()
-                .OrderBy(c => c.ChargeTrimestre.Libelle)
                 .ToListAsync();
 
             return View(list);
         }
 
-        // GET: ChargeTrimestreSousCopros/Create
+        // CREATE GET
         public IActionResult Create()
         {
             LoadDropdowns();
             return View();
         }
 
-        // POST: ChargeTrimestreSousCopros/Create
+        // CREATE POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ChargeTrimestreId,SousCoproprieteId")] ChargeTrimestreSousCopro link)
+        public async Task<IActionResult> Create(ChargeTrimestreSousCopro cts)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(link);
+                _context.Add(cts);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             LoadDropdowns();
-            return View(link);
+            return View(cts);
         }
 
-        // GET: ChargeTrimestreSousCopros/Delete/5
+        // DELETE GET
         public async Task<IActionResult> Delete(int? chargeTrimestreId, int? sousCoproprieteId)
         {
             if (chargeTrimestreId == null || sousCoproprieteId == null)
                 return NotFound();
 
-            var link = await _context.ChargeTrimestreSousCopros
-                .Include(l => l.ChargeTrimestre)
-                .Include(l => l.SousCopropriete)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(l =>
-                    l.ChargeTrimestreId == chargeTrimestreId &&
-                    l.SousCoproprieteId == sousCoproprieteId);
+            var assoc = await _context.ChargeTrimestreSousCopros
+                .Include(c => c.ChargeTrimestre)
+                .Include(c => c.SousCopropriete)
+                .FirstOrDefaultAsync(c =>
+                    c.ChargeTrimestreId == chargeTrimestreId &&
+                    c.SousCoproprieteId == sousCoproprieteId);
 
-            if (link == null)
+            if (assoc == null)
                 return NotFound();
 
-            return View(link);
+            return View(assoc);
         }
 
-        // POST: ChargeTrimestreSousCopros/Delete
+        // DELETE POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int chargeTrimestreId, int sousCoproprieteId)
         {
-            var link = await _context.ChargeTrimestreSousCopros.FindAsync(chargeTrimestreId, sousCoproprieteId);
-            if (link != null)
+            var assoc = await _context.ChargeTrimestreSousCopros
+                .FirstOrDefaultAsync(c =>
+                    c.ChargeTrimestreId == chargeTrimestreId &&
+                    c.SousCoproprieteId == sousCoproprieteId);
+
+            if (assoc != null)
             {
-                _context.ChargeTrimestreSousCopros.Remove(link);
+                _context.ChargeTrimestreSousCopros.Remove(assoc);
                 await _context.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(Index));
         }
 
+        // Helpers
         private void LoadDropdowns()
         {
-            ViewBag.ChargeTrimestreId = new SelectList(
-                _context.ChargeTrimestres.OrderBy(c => c.Libelle),
-                "Id", "Libelle");
+            ViewBag.Charges = _context.ChargeTrimestres
+                .Include(c => c.Trimestre)
+                .Select(c => new
+                {
+                    c.Id,
+                    Label = $"{c.Libelle} ({c.Trimestre.Annee} - T{c.Trimestre.Numero})"
+                })
+                .ToList();
 
-            ViewBag.SousCoproprieteId = new SelectList(
-                _context.SousCoproprietes.OrderBy(s => s.Nom),
-                "Id", "Nom");
+            ViewBag.SousCopros = _context.SousCoproprietes
+                .OrderBy(s => s.Nom)
+                .ToList();
         }
     }
 }

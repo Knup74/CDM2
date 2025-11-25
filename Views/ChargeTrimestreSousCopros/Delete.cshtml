@@ -4,15 +4,15 @@
     ViewData["Title"] = "Supprimer une association";
 }
 
-<h1>Supprimer cette association</h1>
+<div class="alert alert-danger shadow-sm">
+    <h4 class="alert-heading">Supprimer cette association ?</h4>
 
-<dl class="row">
-    <dt class="col-sm-3">Charge</dt>
-    <dd class="col-sm-9">@Model.ChargeTrimestre.Libelle</dd>
-
-    <dt class="col-sm-3">Sous-copropriété</dt>
-    <dd class="col-sm-9">@Model.SousCopropriete.Nom</dd>
-</dl>
+    <ul>
+        <li><strong>Charge :</strong> @Model.ChargeTrimestre.Libelle</li>
+        <li><strong>Trimestre :</strong> @Model.ChargeTrimestre.Trimestre.Annee - T@Model.ChargeTrimestre.Trimestre.Numero</li>
+        <li><strong>Sous-copropriété :</strong> @Model.SousCopropriete.Nom</li>
+    </ul>
+</div>
 
 <form asp-action="DeleteConfirmed">
     <input type="hidden" name="chargeTrimestreId" value="@Model.ChargeTrimestreId" />

@@ -1,35 +1,37 @@
 ﻿@model IEnumerable<CDM.Database.Models.ChargeTrimestreSousCopro>
 
 @{
-    ViewData["Title"] = "Associations Charges / Sous-copropriétés";
+    ViewData["Title"] = "Associations des charges aux sous-copropriétés";
 }
 
-<h1>Associations Charges ↔ Sous-copropriétés</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Associations Charge ↔ Sous-copropriété</h3>
+    <a asp-action="Create" class="btn btn-primary">➕ Nouvelle association</a>
+</div>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Ajouter une association</a>
-</p>
-
-<table class="table table-striped">
-    <thead>
+<table class="table table-striped table-hover shadow-sm">
+    <thead class="table-light">
         <tr>
             <th>Charge</th>
+            <th>Trimestre</th>
             <th>Sous-copropriété</th>
-            <th></th>
+            <th class="text-end">Actions</th>
         </tr>
     </thead>
+
     <tbody>
-@foreach (var c in Model)
+@foreach (var assoc in Model)
 {
         <tr>
-            <td>@c.ChargeTrimestre.Libelle</td>
-            <td>@c.SousCopropriete.Nom</td>
-            <td>
+            <td>@assoc.ChargeTrimestre.Libelle</td>
+            <td>@assoc.ChargeTrimestre.Trimestre.Annee - T@assoc.ChargeTrimestre.Trimestre.Numero</td>
+            <td>@assoc.SousCopropriete.Nom</td>
+
+            <td class="text-end">
                 <a asp-action="Delete"
-                   asp-route-chargeTrimestreId="@c.ChargeTrimestreId"
-                   asp-route-sousCoproprieteId="@c.SousCoproprieteId">
-                   Supprimer
-                </a>
+                   asp-route-chargeTrimestreId="@assoc.ChargeTrimestreId"
+                   asp-route-sousCoproprieteId="@assoc.SousCoproprieteId"
+                   class="btn btn-sm btn-danger">Supprimer</a>
             </td>
         </tr>
 }
