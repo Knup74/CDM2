@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CDM.Database;
 using CDM.Database.Models;
 
-namespace CDM.Controllers
+namespace CDM2.Controllers
 {
     public class LotsController : Controller
     {
@@ -21,8 +20,6 @@ namespace CDM.Controllers
             var lots = await _context.Lots
                 .Include(l => l.Coproprietaire)
                 .Include(l => l.SousCopropriete)
-                .AsNoTracking()
-                .OrderBy(l => l.NumeroLot)
                 .ToListAsync();
 
             return View(lots);
@@ -36,8 +33,7 @@ namespace CDM.Controllers
             var lot = await _context.Lots
                 .Include(l => l.Coproprietaire)
                 .Include(l => l.SousCopropriete)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(l => l.Id == id);
 
             if (lot == null) return NotFound();
 
@@ -47,14 +43,14 @@ namespace CDM.Controllers
         // GET: Lots/Create
         public IActionResult Create()
         {
-            LoadDropdowns();
+            LoadSelections();
             return View();
         }
 
         // POST: Lots/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NumeroLot,Tantiemes,CoproprietaireId,SousCoproprieteId")] Lot lot)
+        public async Task<IActionResult> Create(Lot lot)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +59,7 @@ namespace CDM.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            LoadDropdowns();
+            LoadSelections();
             return View(lot);
         }
 
@@ -75,14 +71,14 @@ namespace CDM.Controllers
             var lot = await _context.Lots.FindAsync(id);
             if (lot == null) return NotFound();
 
-            LoadDropdowns();
+            LoadSelections();
             return View(lot);
         }
 
         // POST: Lots/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NumeroLot,Tantiemes,CoproprietaireId,SousCoproprieteId")] Lot lot)
+        public async Task<IActionResult> Edit(int id, Lot lot)
         {
             if (id != lot.Id) return NotFound();
 
@@ -95,13 +91,14 @@ namespace CDM.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LotExists(lot.Id)) return NotFound();
-                    else throw;
+                    if (!_context.Lots.Any(e => e.Id == id)) return NotFound();
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
-            LoadDropdowns();
+            LoadSelections();
             return View(lot);
         }
 
@@ -113,16 +110,15 @@ namespace CDM.Controllers
             var lot = await _context.Lots
                 .Include(l => l.Coproprietaire)
                 .Include(l => l.SousCopropriete)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(l => l.Id == id);
 
             if (lot == null) return NotFound();
 
             return View(lot);
         }
 
-        // POST: Lots/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Lots/DeleteConfirmed
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -135,20 +131,17 @@ namespace CDM.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private void LoadDropdowns()
+        private void LoadSelections()
         {
-            ViewBag.CoproprietaireId = new SelectList(
-                _context.Coproprietaires.OrderBy(c => c.Nom),
-                "Id", "Nom");
+            ViewBag.Coproprietaires =
+                _context.Coproprietaires
+                .Select(c => new { c.Id, NomComplet = c.Nom })
+                .ToList();
 
-            ViewBag.SousCoproprieteId = new SelectList(
-                _context.SousCoproprietes.OrderBy(s => s.Nom),
-                "Id", "Nom");
-        }
-
-        private bool LotExists(int id)
-        {
-            return _context.Lots.Any(e => e.Id == id);
+            ViewBag.SousCopros =
+                _context.SousCoproprietes
+                .Select(s => new { s.Id, s.Nom })
+                .ToList();
         }
     }
 }

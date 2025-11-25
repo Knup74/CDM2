@@ -1,34 +1,42 @@
 @model CDM.Database.Models.Lot
-
 @{
     ViewData["Title"] = "Créer un lot";
 }
 
-<h1>Créer un lot</h1>
+<h3 class="mb-3">Créer un lot</h3>
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="NumeroLot"></label>
-        <input asp-for="NumeroLot" class="form-control"/>
+<form asp-action="Create" class="shadow-sm p-4 bg-white rounded">
+
+    <div class="mb-3">
+        <label asp-for="NumeroLot" class="form-label"></label>
+        <input asp-for="NumeroLot" class="form-control" />
         <span asp-validation-for="NumeroLot" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Tantiemes"></label>
-        <input asp-for="Tantiemes" class="form-control"/>
+    <div class="mb-3">
+        <label asp-for="Tantiemes" class="form-label"></label>
+        <input asp-for="Tantiemes" class="form-control" />
         <span asp-validation-for="Tantiemes" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label>Copropriétaire</label>
-        <select asp-for="CoproprietaireId" asp-items="ViewBag.CoproprietaireId" class="form-control"></select>
+    <div class="mb-3">
+        <label class="form-label">Copropriétaire</label>
+        <select asp-for="CoproprietaireId" class="form-select"
+                asp-items="@(new SelectList(ViewBag.Coproprietaires, "Id", "NomComplet"))">
+        </select>
     </div>
 
-    <div class="form-group">
-        <label>Sous-copropriété</label>
-        <select asp-for="SousCoproprieteId" asp-items="ViewBag.SousCoproprieteId" class="form-control"></select>
+    <div class="mb-3">
+        <label class="form-label">Sous-copropriété</label>
+        <select asp-for="SousCoproprieteId" class="form-select"
+                asp-items="@(new SelectList(ViewBag.SousCopros, "Id", "Nom"))">
+        </select>
     </div>
 
-    <button class="btn btn-primary mt-3" type="submit">Créer</button>
+    <button type="submit" class="btn btn-success mt-3">Créer</button>
     <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

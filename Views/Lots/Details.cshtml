@@ -1,26 +1,27 @@
 @model CDM.Database.Models.Lot
-
 @{
     ViewData["Title"] = "Détails du lot";
 }
 
-<h1>Détails du lot</h1>
+<h3 class="mb-3">Détails du lot</h3>
 
-<dl class="row">
-    <dt class="col-sm-3">Numéro</dt>
-    <dd class="col-sm-9">@Model.NumeroLot</dd>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Numéro de lot</dt>
+            <dd class="col-sm-9">@Model.NumeroLot</dd>
 
-    <dt class="col-sm-3">Tantièmes</dt>
-    <dd class="col-sm-9">@Model.Tantiemes</dd>
+            <dt class="col-sm-3">Tantièmes</dt>
+            <dd class="col-sm-9">@Model.Tantiemes</dd>
 
-    <dt class="col-sm-3">Copropriétaire</dt>
-    <dd class="col-sm-9">@Model.Coproprietaire?.Nom</dd>
+            <dt class="col-sm-3">Copropriétaire</dt>
+            <dd class="col-sm-9">@Model.Coproprietaire?.Nom</dd>
 
-    <dt class="col-sm-3">Sous-copropriété</dt>
-    <dd class="col-sm-9">@Model.SousCopropriete?.Nom</dd>
-</dl>
+            <dt class="col-sm-3">Sous-copropriété</dt>
+            <dd class="col-sm-9">@Model.SousCopropriete?.Nom</dd>
+        </dl>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
-    <a asp-action="Index" class="btn btn-secondary">Retour</a>
-</p>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-3">Modifier</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Retour</a>
