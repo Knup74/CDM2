@@ -101,3 +101,11 @@ form input, form select {
 .mt-large {
   margin-top: 24px;
 }
+
+.card .card-title {
+  font-size: 1.5rem;
+}
+
+.card .card-subtitle {
+  font-size: 0.9rem;
+}

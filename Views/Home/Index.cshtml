@@ -1,8 +1,196 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model CDM.Models.DashboardViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Tableau de bord";
+    var evolutionJson = JsonSerializer.Serialize(Model.EvolutionSeries);
+    var donutJson = JsonSerializer.Serialize(Model.RepartitionSousCopro);
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="mb-4">
+    <h2>Bonjour, @Model.CoproprietaireNom</h2>
+    <p class="text-muted">Voici le résumé de vos comptes</p>
 </div>
+
+<div class="row g-3">
+    <!-- KPI cards -->
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Montant dû (trimestre courant)</h6>
+                <h3 class="card-title">@Model.MontantDuCurrentQuarter.ToString("N2") €</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Montant payé (trimestre courant)</h6>
+                <h3 class="card-title">@Model.MontantRegleCurrentQuarter.ToString("N2") €</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Solde cumulatif</h6>
+                <h3 class="card-title">@Model.SoldeCumulatif.ToString("N2") €</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Dernier appel</h6>
+                @if (Model.LastAppel != null && Model.LastAppel.Id != 0)
+                {
+                    <h5 class="mb-1">@Model.LastAppel.MontantDu.ToString("N2") €</h5>
+                    <small class="text-muted">T@Model.LastAppel.TrimestreNumero @Model.LastAppel.Annee</small>
+                }
+                else
+                {
+                    <div class="text-muted">Aucun appel</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="my-4" />
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5>Évolution des charges (année @DateTime.UtcNow.Year)</h5>
+                <canvas id="evolutionChart" height="160"></canvas>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5>Vos lots</h5>
+                <div class="row">
+                    @foreach (var lot in Model.Lots)
+                    {
+                        <div class="col-12 col-md-6 mb-2">
+                            <div class="p-2 border rounded">
+                                <strong>Lot @lot.NumeroLot</strong><br />
+                                <small class="text-muted">Tantièmes: @lot.Tantiemes</small><br />
+                                <small class="text-muted">Sous-copro: @lot.SousCopro</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5>Répartition par Sous-copro</h5>
+                <canvas id="donutChart" height="220"></canvas>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5>Historique des appels</h5>
+                <table class="table table-sm mb-0">
+                    <thead class="table-light">
+                        <tr><th>Trimestre</th><th>Du</th><th>Payé</th><th>Solde</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in Model.AppelsHistory.Take(8))
+                        {
+                            <tr>
+                                <td>@($"{a.Annee} - T{a.TrimestreNumero}")</td>
+                                <td>@a.MontantDu.ToString("N2") €</td>
+                                <td>@a.MontantRegle.ToString("N2") €</td>
+                                <td>@(a.MontantDu - a.MontantRegle).ToString("N2") €</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        // Evolution chart data
+        const evolutionData = @Html.Raw(evolutionJson);
+
+        const labels = evolutionData.map(x => 'T' + x.numero);
+        const previsionnel = evolutionData.map(x => x.previsionnel);
+        const reel = evolutionData.map(x => x.reel);
+
+        const ctx = document.getElementById('evolutionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Prévisionnel',
+                        data: previsionnel,
+                        tension: 0.3,
+                        fill: false,
+                        borderWidth: 2,
+                        backgroundColor: 'rgba(13,110,253,0.08)',
+                        borderColor: 'rgba(13,110,253,1)'
+                    },
+                    {
+                        label: 'Réel',
+                        data: reel,
+                        tension: 0.3,
+                        fill: false,
+                        borderWidth: 2,
+                        backgroundColor: 'rgba(25,135,84,0.08)',
+                        borderColor: 'rgba(25,135,84,1)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Donut chart
+        const donutData = @Html.Raw(donutJson);
+        const donutLabels = donutData.map(x => x.label);
+        const donutValues = donutData.map(x => x.value);
+
+        const ctx2 = document.getElementById('donutChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: donutLabels,
+                datasets: [{
+                    data: donutValues,
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+}
