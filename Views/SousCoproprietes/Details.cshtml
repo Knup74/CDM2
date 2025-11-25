@@ -1,66 +1,23 @@
 @model CDM.Database.Models.SousCopropriete
-
 @{
-    ViewData["Title"] = "Détails de la sous-copropriété";
+    ViewData["Title"] = "Détails";
 }
 
-<h1>Détails</h1>
+<h3 class="mb-3">Détails de la sous-copropriété</h3>
 
-<dl class="row">
-    <dt class="col-sm-3">Nom</dt>
-    <dd class="col-sm-9">@Model.Nom</dd>
-</dl>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
 
-<h3>Lots associés</h3>
+            <dt class="col-sm-3">Nom</dt>
+            <dd class="col-sm-9">@Model.Nom</dd>
 
-@if (Model.Lots != null && Model.Lots.Any())
-{
-    <table class="table table-striped">
-        <thead>
-            <tr><th>Numéro</th><th>Tantièmes</th></tr>
-        </thead>
-        <tbody>
-        @foreach (var lot in Model.Lots)
-        {
-            <tr>
-                <td>@lot.NumeroLot</td>
-                <td>@lot.Tantiemes</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Aucun lot associé.</p>
-}
+            <dt class="col-sm-3">Nombre de lots</dt>
+            <dd class="col-sm-9">@Model.Lots.Count</dd>
 
-<h3>Charges associées</h3>
+        </dl>
+    </div>
+</div>
 
-@if (Model.ChargeAssociations != null && Model.ChargeAssociations.Any())
-{
-    <table class="table table-striped">
-        <thead>
-            <tr><th>Charge</th><th>Prévisionnel</th><th>Réel</th></tr>
-        </thead>
-        <tbody>
-        @foreach (var c in Model.ChargeAssociations)
-        {
-            <tr>
-                <td>@c.ChargeTrimestre.Libelle</td>
-                <td>@c.ChargeTrimestre.MontantPrevisionnel €</td>
-                <td>@c.ChargeTrimestre.MontantReel €</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Aucune charge affectée.</p>
-}
-
-<p class="mt-3">
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
-    <a asp-action="Index" class="btn btn-secondary">Retour</a>
-</p>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-3">Modifier</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Retour</a>

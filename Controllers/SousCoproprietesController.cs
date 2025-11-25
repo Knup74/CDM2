@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CDM.Database;
 using CDM.Database.Models;
 
-namespace CDM.Controllers
+namespace CDM2.Controllers
 {
     public class SousCoproprietesController : Controller
     {
@@ -17,13 +17,7 @@ namespace CDM.Controllers
         // GET: SousCoproprietes
         public async Task<IActionResult> Index()
         {
-            var list = await _context.SousCoproprietes
-                .Include(s => s.Lots)
-                .AsNoTracking()
-                .OrderBy(s => s.Nom)
-                .ToListAsync();
-
-            return View(list);
+            return View(await _context.SousCoproprietes.ToListAsync());
         }
 
         // GET: SousCoproprietes/Details/5
@@ -33,9 +27,6 @@ namespace CDM.Controllers
 
             var sousCopro = await _context.SousCoproprietes
                 .Include(s => s.Lots)
-                .Include(s => s.ChargeAssociations)
-                    .ThenInclude(ca => ca.ChargeTrimestre)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             if (sousCopro == null) return NotFound();
@@ -52,7 +43,7 @@ namespace CDM.Controllers
         // POST: SousCoproprietes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nom")] SousCopropriete sousCopro)
+        public async Task<IActionResult> Create(SousCopropriete sousCopro)
         {
             if (ModelState.IsValid)
             {
@@ -77,7 +68,7 @@ namespace CDM.Controllers
         // POST: SousCoproprietes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom")] SousCopropriete sousCopro)
+        public async Task<IActionResult> Edit(int id, SousCopropriete sousCopro)
         {
             if (id != sousCopro.Id) return NotFound();
 
@@ -90,9 +81,10 @@ namespace CDM.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SousCoproExists(sousCopro.Id)) return NotFound();
+                    if (!_context.SousCoproprietes.Any(s => s.Id == id)) return NotFound();
                     throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -105,16 +97,15 @@ namespace CDM.Controllers
             if (id == null) return NotFound();
 
             var sousCopro = await _context.SousCoproprietes
-                .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(s => s.Id == id);
 
             if (sousCopro == null) return NotFound();
 
             return View(sousCopro);
         }
 
-        // POST: SousCoproprietes/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: SousCoproprietes/DeleteConfirmed
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -126,11 +117,6 @@ namespace CDM.Controllers
             }
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool SousCoproExists(int id)
-        {
-            return _context.SousCoproprietes.Any(e => e.Id == id);
         }
     }
 }

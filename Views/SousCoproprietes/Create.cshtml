@@ -4,15 +4,20 @@
     ViewData["Title"] = "Créer une sous-copropriété";
 }
 
-<h1>Créer une sous-copropriété</h1>
+<h3 class="mb-3">Créer une sous-copropriété</h3>
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="Nom"></label>
-        <input asp-for="Nom" class="form-control"/>
+<form asp-action="Create" class="shadow-sm p-4 bg-white rounded">
+
+    <div class="mb-3">
+        <label asp-for="Nom" class="form-label"></label>
+        <input asp-for="Nom" class="form-control" />
         <span asp-validation-for="Nom" class="text-danger"></span>
     </div>
 
-    <button class="btn btn-primary mt-3" type="submit">Créer</button>
+    <button type="submit" class="btn btn-success mt-3">Créer</button>
     <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
