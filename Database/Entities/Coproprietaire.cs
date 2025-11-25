@@ -13,6 +13,9 @@ public class Coproprietaire
 
     public string Role { get; set; } = "Coproprietaire"; // ou "Admin"
     public bool IsActive { get; set; } = true;
+    public string? ResetPasswordToken { get; set; }
+    public DateTime? ResetPasswordTokenExpiration { get; set; }
+
 
     // Relations existantes
     public List<Lot> Lots { get; set; } = new();

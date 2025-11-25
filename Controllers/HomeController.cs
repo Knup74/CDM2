@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using CDM2.Models;
+using CDM.Models;
 
-namespace CDM2.Controllers;
+namespace CDM.Controllers;
 
 public class HomeController : Controller
 {

@@ -14,9 +14,43 @@ builder.Services.AddScoped<CDM.Service.AuthService>();
 builder.Services.AddSession();
 
 
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(typeof(RequireLoginAttribute));
+});
 
-builder.Services.AddControllersWithViews();
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var auth = scope.ServiceProvider.GetRequiredService<CDM.Service.AuthService>();
+
+    // S'il n'y a aucun admin → création automatique
+    if (!db.Coproprietaires.Any(c => c.Role == "Admin"))
+    {
+        Console.WriteLine("⚠ Aucun admin détecté → création d'un compte admin par défaut.");
+
+        auth.CreatePassword("Adding@2016", out var hash, out var salt);
+
+        var admin = new CDM.Database.Models.Coproprietaire
+        {
+            Nom = "FERRER",
+            Email = "plf74@msn.com",
+            Role = "Admin",
+            IsActive = true,
+            PasswordHash = hash,
+            PasswordSalt = salt,
+        };
+
+        db.Coproprietaires.Add(admin);
+        db.SaveChanges();
+
+        Console.WriteLine("✔ Administrateur par défaut créé !");
+    }
+}
+
+
+
 app.UseSession();
 using (var scope = app.Services.CreateScope())
 {
