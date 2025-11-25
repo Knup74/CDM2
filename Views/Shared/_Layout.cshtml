@@ -1,55 +1,95 @@
-﻿@{
-    var title = ViewData["Title"] ?? "CDM";
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@title - CDM</title>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>@ViewData["Title"] - CDM2</title>
 
-    <!-- Site CSS compilé depuis SCSS -->
+    <!-- CSS Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Ton CSS -->
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 
-<body>
+<body class="bg-light">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <div class="title">🏢 CDM</div>
+    <!-- NAVBAR RESPONSIVE -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
 
-        <a href="/">🏠 Accueil</a>
-        <a asp-controller="Trimestres" asp-action="Index">📅 Trimestres</a>
-        <a asp-controller="Coproprietaires" asp-action="Index">👤 Copropriétaires</a>
-        <a asp-controller="Lots" asp-action="Index">🔢 Lots</a>
-        <a asp-controller="SousCoproprietes" asp-action="Index">🏘 Sous-copropriétés</a>
-        <a asp-controller="ChargeTrimestres" asp-action="Index">💰 Charges</a>
-        <a asp-controller="ChargeTrimestreSousCopros" asp-action="Index">🔗 Associations Charges/Sous-copro</a>
-        <a asp-controller="AppelsDeFonds" asp-action="Index">💸 Appels de fonds</a>
-    </div>
+            <!-- Logo -->
+            <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                CDM
+            </a>
 
-    <!-- PAGE CONTENT -->
-    <div class="content">
-        <header class="mb-4">
-            <h2>@title</h2>
-            <hr />
-        </header>
+            <!-- Bouton burger -->
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <main role="main">
-            @RenderBody()
-        </main>
+            <!-- Liens -->
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-        <footer class="mt-4 text-muted">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Coproprietaires" asp-action="Index">Copropriétaires</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Lots" asp-action="Index">Lots</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="SousCoproprietes" asp-action="Index">Sous-copropriétés</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Trimestres" asp-action="Index">Trimestres</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="ChargeTrimestres" asp-action="Index">Charges</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="AppelsDeFonds" asp-action="Index">Appels de Fonds</a>
+                    </li>
+
+                </ul>
+
+                <!-- Nav à droite -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Home" asp-action="Privacy">Confidentialité</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- CONTENU -->
+    <main class="container py-4">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-top mt-auto py-3">
+        <div class="container text-center text-muted small">
             © @DateTime.Now.Year - CDM2
-        </footer>
-    </div>
+        </div>
+    </footer>
 
-    <!-- Bootstrap bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS (NÉCESSAIRE POUR LE MENU RESPONSIVE !) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

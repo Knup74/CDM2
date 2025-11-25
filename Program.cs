@@ -9,11 +9,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=app.db"));
 
 
-builder.Services.AddScoped<ChargeCalculator>();
+builder.Services.AddScoped<CDM.Service.ChargeCalculator>();
+builder.Services.AddScoped<CDM.Service.AuthService>();
+builder.Services.AddSession();
+
 
 
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
+app.UseSession();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();

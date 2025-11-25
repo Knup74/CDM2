@@ -5,6 +5,7 @@ using CDM.Database.Models;
 
 namespace CDM.Controllers
 {
+    [AdminOnly]
     public class CoproprietairesController : Controller
     {
         private readonly AppDbContext _context;
