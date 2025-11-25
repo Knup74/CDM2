@@ -1,26 +1,30 @@
 @model CDM.Database.Models.Coproprietaire
 
 @{
-    ViewData["Title"] = "Modifier le copropriétaire";
+    ViewData["Title"] = "Modifier un copropriétaire";
 }
 
-<h1>Modifier le copropriétaire</h1>
+<h3 class="mb-3">Modifier un copropriétaire</h3>
 
-<form asp-action="Edit">
+<form asp-action="Edit" class="shadow-sm p-4 bg-white rounded">
     <input type="hidden" asp-for="Id" />
 
-    <div class="form-group">
-        <label asp-for="Nom"></label>
-        <input asp-for="Nom" class="form-control"/>
+    <div class="mb-3">
+        <label asp-for="Nom" class="form-label"></label>
+        <input asp-for="Nom" class="form-control" />
         <span asp-validation-for="Nom" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control"/>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
+    <button type="submit" class="btn btn-success mt-3">Enregistrer</button>
     <a asp-action="Index" class="btn btn-secondary mt-3">Annuler</a>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

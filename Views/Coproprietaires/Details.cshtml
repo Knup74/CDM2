@@ -4,46 +4,19 @@
     ViewData["Title"] = "Détails du copropriétaire";
 }
 
-<h1>Détails du copropriétaire</h1>
+<h3 class="mb-3">Détails du copropriétaire</h3>
 
-<div>
-    <dl class="row">
-        <dt class="col-sm-3">Nom</dt>
-        <dd class="col-sm-9">@Model.Nom</dd>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Nom</dt>
+            <dd class="col-sm-9">@Model.Nom</dd>
 
-        <dt class="col-sm-3">Email</dt>
-        <dd class="col-sm-9">@Model.Email</dd>
-    </dl>
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+        </dl>
+    </div>
 </div>
 
-<h3>Lots associés</h3>
-
-@if (Model.Lots != null && Model.Lots.Any())
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Numéro</th>
-                <th>Tantièmes</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var lot in Model.Lots)
-        {
-            <tr>
-                <td>@lot.NumeroLot</td>
-                <td>@lot.Tantiemes</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Aucun lot associé.</p>
-}
-
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
-    <a asp-action="Index" class="btn btn-secondary">Retour</a>
-</p>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-3">Modifier</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Retour</a>
