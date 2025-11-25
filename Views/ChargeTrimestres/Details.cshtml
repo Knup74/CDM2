@@ -1,31 +1,31 @@
 @model CDM.Database.Models.ChargeTrimestre
 
-@{
-    ViewData["Title"] = "Détails de la charge";
-}
+<h3 class="mb-3">Détails de la charge</h3>
 
-<h1>Détails</h1>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
 
-<dl class="row">
-    <dt class="col-sm-3">Libellé</dt>
-    <dd class="col-sm-9">@Model.Libelle</dd>
+            <dt class="col-sm-3">Libellé</dt>
+            <dd class="col-sm-9">@Model.Libelle</dd>
 
-    <dt class="col-sm-3">Trimestre</dt>
-    <dd class="col-sm-9">@($"{Model.Trimestre.Annee} - T{Model.Trimestre.Numero}")</dd>
+            <dt class="col-sm-3">Montant prévisionnel</dt>
+            <dd class="col-sm-9">@Model.MontantPrevisionnel €</dd>
 
-    <dt class="col-sm-3">Montant prévisionnel</dt>
-    <dd class="col-sm-9">@Model.MontantPrevisionnel €</dd>
+            <dt class="col-sm-3">Montant réel</dt>
+            <dd class="col-sm-9">@Model.MontantReel €</dd>
 
-    <dt class="col-sm-3">Montant réel</dt>
-    <dd class="col-sm-9">@Model.MontantReel €</dd>
+            <dt class="col-sm-3">Trimestre</dt>
+            <dd class="col-sm-9">@Model.Trimestre.Annee - T@Model.Trimestre.Numero</dd>
 
-    <dt class="col-sm-3">Sous-copropriétés</dt>
-    <dd class="col-sm-9">
-        @string.Join(", ", Model.SousCopros.Select(s => s.SousCopropriete.Nom))
-    </dd>
-</dl>
+            <dt class="col-sm-3">Sous-copropriétés</dt>
+            <dd class="col-sm-9">
+                @string.Join(", ", Model.SousCopros.Select(sc => sc.SousCopropriete.Nom))
+            </dd>
 
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
-    <a asp-action="Index" class="btn btn-secondary">Retour</a>
-</p>
+        </dl>
+    </div>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-3">Modifier</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Retour</a>

@@ -1,41 +1,43 @@
 ﻿@model IEnumerable<CDM.Database.Models.ChargeTrimestre>
 
 @{
-    ViewData["Title"] = "Charges Trimestrielles";
+    ViewData["Title"] = "Charges par trimestre";
 }
 
-<h1>Charges trimestrielles</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Charges par trimestre</h3>
+    <a asp-action="Create" class="btn btn-primary">➕ Nouvelle charge</a>
+</div>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Ajouter une charge</a>
-</p>
-
-<table class="table table-striped">
-    <thead>
+<table class="table table-striped table-hover shadow-sm">
+    <thead class="table-light">
         <tr>
             <th>Libellé</th>
+            <th>Montant prévu</th>
+            <th>Montant réel</th>
             <th>Trimestre</th>
-            <th>Prévisionnel</th>
-            <th>Réel</th>
-            <th>Sous-copropriétés</th>
-            <th></th>
+            <th>Sous-copros</th>
+            <th class="text-end">Actions</th>
         </tr>
     </thead>
+
     <tbody>
-@foreach (var c in Model)
+@foreach (var item in Model)
 {
         <tr>
-            <td>@c.Libelle</td>
-            <td>@($"{c.Trimestre.Annee} - T{c.Trimestre.Numero}")</td>
-            <td>@c.MontantPrevisionnel €</td>
-            <td>@c.MontantReel €</td>
+            <td>@item.Libelle</td>
+            <td>@item.MontantPrevisionnel €</td>
+            <td>@item.MontantReel €</td>
+            <td>@($"{item.Trimestre.Annee} - T{item.Trimestre.Numero}")</td>
+            
             <td>
-                @string.Join(", ", c.SousCopros.Select(s => s.SousCopropriete.Nom))
+                @string.Join(", ", item.SousCopros.Select(sc => sc.SousCopropriete.Nom))
             </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@c.Id">Détails</a> |
-                <a asp-action="Edit" asp-route-id="@c.Id">Modifier</a> |
-                <a asp-action="Delete" asp-route-id="@c.Id">Supprimer</a>
+
+            <td class="text-end">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Modifier</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Détails</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Supprimer</a>
             </td>
         </tr>
 }

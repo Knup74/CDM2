@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CDM.Database;
 using CDM.Database.Models;
@@ -15,22 +14,23 @@ namespace CDM.Controllers
             _context = context;
         }
 
-        // GET: Charges
+        // ---------------------------------------
+        // INDEX
+        // ---------------------------------------
         public async Task<IActionResult> Index()
         {
-            var charges = await _context.ChargeTrimestres
+            var list = await _context.ChargeTrimestres
                 .Include(c => c.Trimestre)
                 .Include(c => c.SousCopros)
-                    .ThenInclude(link => link.SousCopropriete)
-                .AsNoTracking()
-                .OrderByDescending(c => c.Trimestre.Annee)
-                .ThenBy(c => c.Trimestre.Numero)
+                    .ThenInclude(sc => sc.SousCopropriete)
                 .ToListAsync();
 
-            return View(charges);
+            return View(list);
         }
 
-        // GET: ChargeTrimestres/Details/5
+        // ---------------------------------------
+        // DETAILS
+        // ---------------------------------------
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -38,8 +38,7 @@ namespace CDM.Controllers
             var charge = await _context.ChargeTrimestres
                 .Include(c => c.Trimestre)
                 .Include(c => c.SousCopros)
-                    .ThenInclude(link => link.SousCopropriete)
-                .AsNoTracking()
+                    .ThenInclude(sc => sc.SousCopropriete)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (charge == null) return NotFound();
@@ -47,38 +46,47 @@ namespace CDM.Controllers
             return View(charge);
         }
 
-        // GET: ChargeTrimestres/Create
+        // ---------------------------------------
+        // CREATE (GET)
+        // ---------------------------------------
         public IActionResult Create()
         {
-            LoadDropdowns();
+            LoadSelections();
             return View();
         }
 
-        // POST: ChargeTrimestres/Create
+        // ---------------------------------------
+        // CREATE (POST)
+        // ---------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ChargeTrimestre charge, int[] sousCoproIds)
+        public async Task<IActionResult> Create(ChargeTrimestre charge, int[] SousCoprosIds)
         {
             if (ModelState.IsValid)
             {
-                foreach (var id in sousCoproIds)
+                _context.Add(charge);
+                await _context.SaveChangesAsync();
+
+                foreach (var id in SousCoprosIds)
                 {
-                    charge.SousCopros.Add(new ChargeTrimestreSousCopro
+                    _context.ChargeTrimestreSousCopros.Add(new ChargeTrimestreSousCopro
                     {
+                        ChargeTrimestreId = charge.Id,
                         SousCoproprieteId = id
                     });
                 }
 
-                _context.Add(charge);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            LoadDropdowns();
+            LoadSelections();
             return View(charge);
         }
 
-        // GET: ChargeTrimestres/Edit/5
+        // ---------------------------------------
+        // EDIT (GET)
+        // ---------------------------------------
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -89,67 +97,60 @@ namespace CDM.Controllers
 
             if (charge == null) return NotFound();
 
-            LoadDropdowns(charge);
+            ViewBag.SelectedSousCopros = charge.SousCopros.Select(sc => sc.SousCoproprieteId).ToList();
+
+            LoadSelections();
             return View(charge);
         }
 
-        // POST: ChargeTrimestres/Edit/5
+        // ---------------------------------------
+        // EDIT (POST)
+        // ---------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ChargeTrimestre charge, int[] sousCoproIds)
+        public async Task<IActionResult> Edit(int id, ChargeTrimestre charge, int[] SousCoprosIds)
         {
             if (id != charge.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
-                try
+                // Update simple fields
+                _context.Update(charge);
+                await _context.SaveChangesAsync();
+
+                // Reset associations
+                var oldAssoc = _context.ChargeTrimestreSousCopros
+                    .Where(sc => sc.ChargeTrimestreId == charge.Id);
+                _context.ChargeTrimestreSousCopros.RemoveRange(oldAssoc);
+
+                foreach (var sid in SousCoprosIds)
                 {
-                    // Charge existante
-                    var existing = await _context.ChargeTrimestres
-                        .Include(c => c.SousCopros)
-                        .FirstOrDefaultAsync(c => c.Id == id);
-
-                    if (existing == null) return NotFound();
-
-                    existing.Libelle = charge.Libelle;
-                    existing.MontantPrevisionnel = charge.MontantPrevisionnel;
-                    existing.MontantReel = charge.MontantReel;
-                    existing.TrimestreId = charge.TrimestreId;
-
-                    // On met à jour les liens
-                    existing.SousCopros.Clear();
-                    foreach (var sid in sousCoproIds)
+                    _context.ChargeTrimestreSousCopros.Add(new ChargeTrimestreSousCopro
                     {
-                        existing.SousCopros.Add(new ChargeTrimestreSousCopro
-                        {
-                            SousCoproprieteId = sid,
-                            ChargeTrimestreId = existing.Id
-                        });
-                    }
-
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ChargeExists(charge.Id)) return NotFound();
-                    throw;
+                        ChargeTrimestreId = charge.Id,
+                        SousCoproprieteId = sid
+                    });
                 }
 
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            LoadDropdowns(charge);
+            LoadSelections();
             return View(charge);
         }
 
-        // GET: ChargeTrimestres/Delete/5
+        // ---------------------------------------
+        // DELETE (GET)
+        // ---------------------------------------
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
             var charge = await _context.ChargeTrimestres
                 .Include(c => c.Trimestre)
-                .AsNoTracking()
+                .Include(c => c.SousCopros)
+                    .ThenInclude(sc => sc.SousCopropriete)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (charge == null) return NotFound();
@@ -157,39 +158,46 @@ namespace CDM.Controllers
             return View(charge);
         }
 
-        // POST: ChargeTrimestres/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // ---------------------------------------
+        // DELETE (POST)
+        // ---------------------------------------
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var charge = await _context.ChargeTrimestres.FindAsync(id);
+
             if (charge != null)
             {
+                var assoc = _context.ChargeTrimestreSousCopros
+                    .Where(sc => sc.ChargeTrimestreId == id);
+
+                _context.ChargeTrimestreSousCopros.RemoveRange(assoc);
                 _context.ChargeTrimestres.Remove(charge);
+
                 await _context.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ChargeExists(int id)
+        // ---------------------------------------
+        // LOAD DROPDOWNS
+        // ---------------------------------------
+        private void LoadSelections()
         {
-            return _context.ChargeTrimestres.Any(e => e.Id == id);
-        }
+            ViewBag.Trimestres = _context.Trimestres
+                .OrderBy(t => t.Annee).ThenBy(t => t.Numero)
+                .Select(t => new
+                {
+                    t.Id,
+                    Label = $"{t.Annee} - T{t.Numero}"
+                })
+                .ToList();
 
-        private void LoadDropdowns(ChargeTrimestre? charge = null)
-        {
-            ViewBag.TrimestreId = new SelectList(
-                _context.Trimestres.OrderBy(t => t.Annee).ThenBy(t => t.Numero),
-                "Id",
-                "Numero",
-                charge?.TrimestreId);
-
-            ViewBag.SousCopros = new MultiSelectList(
-                _context.SousCoproprietes.OrderBy(s => s.Nom),
-                "Id",
-                "Nom",
-                charge?.SousCopros.Select(x => x.SousCoproprieteId));
+            ViewBag.SousCopros = _context.SousCoproprietes
+                .OrderBy(s => s.Nom)
+                .ToList();
         }
     }
 }

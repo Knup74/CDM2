@@ -1,21 +1,19 @@
 @model CDM.Database.Models.ChargeTrimestre
 
-@{
-    ViewData["Title"] = "Supprimer une charge";
-}
+<div class="alert alert-danger shadow-sm">
+    <h4 class="alert-heading">Supprimer une charge</h4>
 
-<h1>Supprimer cette charge</h1>
+    <p>Confirmez-vous la suppression de la charge suivante ?</p>
 
-<dl class="row">
-    <dt class="col-sm-3">Libellé</dt>
-    <dd class="col-sm-9">@Model.Libelle</dd>
+    <ul>
+        <li><strong>@Model.Libelle</strong></li>
+        <li>Trimestre : @Model.Trimestre.Annee - T@Model.Trimestre.Numero</li>
+        <li>Total sous-copros : @Model.SousCopros.Count</li>
+    </ul>
+</div>
 
-    <dt class="col-sm-3">Trimestre</dt>
-    <dd class="col-sm-9">@($"{Model.Trimestre.Annee} - T{Model.Trimestre.Numero}")</dd>
-</dl>
-
-<form asp-action="Delete">
+<form asp-action="DeleteConfirmed">
     <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger">Supprimer</button>
+    <button type="submit" class="btn btn-danger">Supprimer</button>
     <a asp-action="Index" class="btn btn-secondary">Annuler</a>
 </form>

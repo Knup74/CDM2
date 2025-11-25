@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CDM.Database;
 using CDM.Database.Models;
 
-namespace CDM2.Controllers
+namespace CDM.Controllers
 {
     public class SousCoproprietesController : Controller
     {
