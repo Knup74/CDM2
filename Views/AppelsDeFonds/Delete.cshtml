@@ -1,30 +1,18 @@
 @model CDM.Database.Models.AppelDeFond
 
-@{
-    ViewData["Title"] = "Supprimer un appel de fond";
-}
+<div class="alert alert-danger shadow-sm">
+    <h4 class="alert-heading">Supprimer un appel de fond</h4>
 
-<h1>Supprimer cet appel de fond</h1>
-
-<dl class="row">
-    <dt class="col-sm-3">Trimestre</dt>
-    <dd class="col-sm-9">@Model.Trimestre.Annee - T@Model.Trimestre.Numero</dd>
-
-    <dt class="col-sm-3">Copropriétaire</dt>
-    <dd class="col-sm-9">@Model.Coproprietaire.Nom</dd>
-
-    <dt class="col-sm-3">Montant dû</dt>
-    <dd class="col-sm-9">@Model.MontantDu €</dd>
-
-    <dt class="col-sm-3">Montant réglé</dt>
-    <dd class="col-sm-9">@Model.MontantRegle €</dd>
-
-    <dt class="col-sm-3">Régularisation</dt>
-    <dd class="col-sm-9">@Model.Regularisation €</dd>
-</dl>
+    <ul>
+        <li>Copropriétaire : @Model.Coproprietaire.Nom</li>
+        <li>Trimestre : @Model.Trimestre.Annee - T@Model.Trimestre.Numero</li>
+        <li>Montant dû : @Model.MontantDu €</li>
+    </ul>
+</div>
 
 <form asp-action="DeleteConfirmed">
     <input type="hidden" asp-for="Id" />
+
     <button type="submit" class="btn btn-danger">Supprimer</button>
     <a asp-action="Index" class="btn btn-secondary">Annuler</a>
 </form>

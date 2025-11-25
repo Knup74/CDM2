@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CDM.Database;
 using CDM.Database.Models;
@@ -15,19 +14,22 @@ namespace CDM.Controllers
             _context = context;
         }
 
-        // GET: AppelsDeFonds
+        // ---------------------------------------
+        // INDEX
+        // ---------------------------------------
         public async Task<IActionResult> Index()
         {
-            var list = await _context.AppelsDeFonds
+            var appels = await _context.AppelsDeFonds
                 .Include(a => a.Trimestre)
                 .Include(a => a.Coproprietaire)
-                .AsNoTracking()
                 .ToListAsync();
 
-            return View(list);
+            return View(appels);
         }
 
-        // GET: AppelsDeFonds/Details/5
+        // ---------------------------------------
+        // DETAILS
+        // ---------------------------------------
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,8 +38,7 @@ namespace CDM.Controllers
             var appel = await _context.AppelsDeFonds
                 .Include(a => a.Trimestre)
                 .Include(a => a.Coproprietaire)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(a => a.Id == id);
 
             if (appel == null)
                 return NotFound();
@@ -45,33 +46,36 @@ namespace CDM.Controllers
             return View(appel);
         }
 
-        // GET: AppelsDeFonds/Create
+        // ---------------------------------------
+        // CREATE (GET)
+        // ---------------------------------------
         public IActionResult Create()
         {
-            LoadDropdowns();
+            LoadSelections();
             return View();
         }
 
-        // POST: AppelsDeFonds/Create
+        // ---------------------------------------
+        // CREATE (POST)
+        // ---------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AppelDeFond appel)
         {
             if (ModelState.IsValid)
             {
-                // auto-calcul si besoin
-                appel.Regularisation = appel.MontantRegle - appel.MontantDu;
-
                 _context.Add(appel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            LoadDropdowns();
+            LoadSelections();
             return View(appel);
         }
 
-        // GET: AppelsDeFonds/Edit/5
+        // ---------------------------------------
+        // EDIT (GET)
+        // ---------------------------------------
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,11 +85,13 @@ namespace CDM.Controllers
             if (appel == null)
                 return NotFound();
 
-            LoadDropdowns();
+            LoadSelections();
             return View(appel);
         }
 
-        // POST: AppelsDeFonds/Edit/5
+        // ---------------------------------------
+        // EDIT (POST)
+        // ---------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AppelDeFond appel)
@@ -95,28 +101,19 @@ namespace CDM.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    appel.Regularisation = appel.MontantRegle - appel.MontantDu;
+                _context.Update(appel);
+                await _context.SaveChangesAsync();
 
-                    _context.Update(appel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AppelExists(appel.Id))
-                        return NotFound();
-
-                    throw;
-                }
                 return RedirectToAction(nameof(Index));
             }
 
-            LoadDropdowns();
+            LoadSelections();
             return View(appel);
         }
 
-        // GET: AppelsDeFonds/Delete/5
+        // ---------------------------------------
+        // DELETE (GET)
+        // ---------------------------------------
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,7 +122,7 @@ namespace CDM.Controllers
             var appel = await _context.AppelsDeFonds
                 .Include(a => a.Trimestre)
                 .Include(a => a.Coproprietaire)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(a => a.Id == id);
 
             if (appel == null)
                 return NotFound();
@@ -133,41 +130,41 @@ namespace CDM.Controllers
             return View(appel);
         }
 
-        // POST: AppelsDeFonds/Delete/5
-        [HttpPost, ValidateAntiForgeryToken]
+        // ---------------------------------------
+        // DELETE (POST)
+        // ---------------------------------------
+        [HttpPost, ActionName("DeleteConfirmed")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var appel = await _context.AppelsDeFonds.FindAsync(id);
+
             if (appel != null)
             {
                 _context.AppelsDeFonds.Remove(appel);
                 await _context.SaveChangesAsync();
             }
+
             return RedirectToAction(nameof(Index));
         }
 
-        private void LoadDropdowns()
+        // ---------------------------------------
+        // Load dropdowns
+        // ---------------------------------------
+        private void LoadSelections()
         {
-            ViewBag.TrimestreId = new SelectList(
-                _context.Trimestres
-                    .OrderBy(t => t.Annee)
-                    .ThenBy(t => t.Numero)
-                    .Select(t => new {
-                        t.Id,
-                        Label = t.Annee + " - T" + t.Numero
-                    }),
-                "Id", "Label"
-            );
+            ViewBag.Trimestres = _context.Trimestres
+                .OrderBy(t => t.Annee).ThenBy(t => t.Numero)
+                .Select(t => new 
+                {
+                    t.Id,
+                    Label = $"{t.Annee} - T{t.Numero}"
+                })
+                .ToList();
 
-            ViewBag.CoproprietaireId = new SelectList(
-                _context.Coproprietaires.OrderBy(c => c.Nom),
-                "Id", "Nom"
-            );
-        }
-
-        private bool AppelExists(int id)
-        {
-            return _context.AppelsDeFonds.Any(e => e.Id == id);
+            ViewBag.Coproprietaires = _context.Coproprietaires
+                .OrderBy(c => c.Nom)
+                .ToList();
         }
     }
 }

@@ -1,29 +1,30 @@
 @model CDM.Database.Models.AppelDeFond
 
-@{
-    ViewData["Title"] = "Détails appel de fond";
-}
+<h3 class="mb-3">Détails de l'appel de fond</h3>
 
-<h1>Détails</h1>
+<div class="card shadow-sm">
+    <div class="card-body">
 
-<dl class="row">
-    <dt class="col-sm-3">Trimestre</dt>
-    <dd class="col-sm-9">@Model.Trimestre.Annee - T@Model.Trimestre.Numero</dd>
+        <dl class="row mb-0">
 
-    <dt class="col-sm-3">Copropriétaire</dt>
-    <dd class="col-sm-9">@Model.Coproprietaire.Nom</dd>
+            <dt class="col-sm-3">Copropriétaire</dt>
+            <dd class="col-sm-9">@Model.Coproprietaire.Nom</dd>
 
-    <dt class="col-sm-3">Montant dû</dt>
-    <dd class="col-sm-9">@Model.MontantDu €</dd>
+            <dt class="col-sm-3">Trimestre</dt>
+            <dd class="col-sm-9">@Model.Trimestre.Annee - T@Model.Trimestre.Numero</dd>
 
-    <dt class="col-sm-3">Montant réglé</dt>
-    <dd class="col-sm-9">@Model.MontantRegle €</dd>
+            <dt class="col-sm-3">Montant dû</dt>
+            <dd class="col-sm-9">@Model.MontantDu €</dd>
 
-    <dt class="col-sm-3">Régularisation</dt>
-    <dd class="col-sm-9">@Model.Regularisation €</dd>
-</dl>
+            <dt class="col-sm-3">Montant réglé</dt>
+            <dd class="col-sm-9">@Model.MontantRegle €</dd>
 
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
-    <a asp-action="Index" class="btn btn-secondary">Retour</a>
-</p>
+            <dt class="col-sm-3">Régularisation</dt>
+            <dd class="col-sm-9">@Model.Regularisation €</dd>
+
+        </dl>
+    </div>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-3">Modifier</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Retour</a>
