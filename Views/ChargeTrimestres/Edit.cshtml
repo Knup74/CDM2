@@ -43,7 +43,7 @@
                            type="checkbox"
                            name="SousCoprosIds"
                            value="@sc.Id"
-                           @(selected.Contains(sc.Id) ? "checked" : "") />
+                           @(selected?.Contains(sc.Id) ? "checked" : "") />
 
                     <label class="form-check-label">@sc.Nom</label>
                 </div>
