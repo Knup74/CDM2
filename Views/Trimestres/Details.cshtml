@@ -1,76 +1,22 @@
 @model CDM.Database.Models.Trimestre
 
 @{
-    ViewData["Title"] = "Détails - Trimestre";
+    ViewData["Title"] = "Détails du trimestre";
 }
 
-<h1>Détails - Trimestre</h1>
+<h3 class="mb-3">Détails du trimestre</h3>
 
-<div>
-    <dl class="row">
-        <dt class="col-sm-3">Année</dt>
-        <dd class="col-sm-9">@Model.Annee</dd>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Année</dt>
+            <dd class="col-sm-9">@Model.Annee</dd>
 
-        <dt class="col-sm-3">Numéro</dt>
-        <dd class="col-sm-9">@Model.Numero</dd>
-
-        <dt class="col-sm-3">Total prévisionnel</dt>
-        <dd class="col-sm-9">@string.Format("{0:N2} €", Model.TotalPrevisionnel)</dd>
-
-        <dt class="col-sm-3">Total réel</dt>
-        <dd class="col-sm-9">@string.Format("{0:N2} €", Model.TotalReel)</dd>
-
-        <dt class="col-sm-3">Validé</dt>
-        <dd class="col-sm-9">@(Model.EstValide ? "Oui" : "Non")</dd>
-    </dl>
+            <dt class="col-sm-3">Trimestre</dt>
+            <dd class="col-sm-9">T@Model.Numero</dd>
+        </dl>
+    </div>
 </div>
 
-<h3>Charges du trimestre</h3>
-@if (Model.Charges != null && Model.Charges.Any())
-{
-    <table class="table">
-        <thead><tr><th>Libellé</th><th>Prévisionnel</th><th>Réel</th></tr></thead>
-        <tbody>
-        @foreach(var c in Model.Charges)
-        {
-            <tr>
-                <td>@c.Libelle</td>
-                <td>@string.Format("{0:N2} €", c.MontantPrevisionnel)</td>
-                <td>@string.Format("{0:N2} €", c.MontantReel)</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Aucune charge rattachée.</p>
-}
-
-<h3>Appels de fonds</h3>
-@if (Model.AppelsDeFonds != null && Model.AppelsDeFonds.Any())
-{
-    <table class="table">
-        <thead><tr><th>Copropriétaire</th><th>Montant dû</th><th>Montant réglé</th><th>Regularisation</th></tr></thead>
-        <tbody>
-        @foreach(var a in Model.AppelsDeFonds)
-        {
-            <tr>
-                <td>@a.Coproprietaire?.Nom</td>
-                <td>@string.Format("{0:N2} €", a.MontantDu)</td>
-                <td>@string.Format("{0:N2} €", a.MontantRegle)</td>
-                <td>@string.Format("{0:N2} €", a.Regularisation)</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Aucun appel de fonds généré.</p>
-}
-
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
-    <a asp-action="Index" class="btn btn-secondary">Retour</a>
-</p>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-3">Modifier</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Retour</a>

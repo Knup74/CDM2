@@ -1,25 +1,22 @@
 @model CDM.Database.Models.Trimestre
 
 @{
-    ViewData["Title"] = "Supprimer - Trimestre";
+    ViewData["Title"] = "Supprimer un trimestre";
 }
 
-<h1>Supprimer - Trimestre</h1>
+<div class="alert alert-danger shadow-sm">
+    <h4 class="alert-heading">Confirmation de suppression</h4>
+    <p>Êtes-vous sûr de vouloir supprimer le trimestre :</p>
 
-<h4>Êtes-vous sûr de vouloir supprimer ce trimestre ?</h4>
-
-<div>
-    <dl class="row">
-        <dt class="col-sm-3">Année</dt>
-        <dd class="col-sm-9">@Model.Annee</dd>
-
-        <dt class="col-sm-3">Numéro</dt>
-        <dd class="col-sm-9">@Model.Numero</dd>
-    </dl>
+    <ul>
+        <li>Année : <strong>@Model.Annee</strong></li>
+        <li>Numéro : <strong>T@Model.Numero</strong></li>
+    </ul>
 </div>
 
-<form asp-action="Delete">
+<form asp-action="DeleteConfirmed">
     <input type="hidden" asp-for="Id" />
+
     <button type="submit" class="btn btn-danger">Supprimer</button>
     <a asp-action="Index" class="btn btn-secondary">Annuler</a>
 </form>
