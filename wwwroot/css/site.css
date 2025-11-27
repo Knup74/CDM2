@@ -8,37 +8,15 @@ body {
   padding: 30px;
 }
 
+nav form {
+  background: none;
+}
+
 footer {
   margin-top: 40px;
   padding-top: 10px;
   border-top: 1px solid #ccc;
   color: #777;
-}
-
-.sidebar {
-  height: 100vh;
-  width: 250px;
-  position: fixed;
-  left: 0;
-  top: 0;
-  background: #1f2937;
-  padding-top: 20px;
-}
-.sidebar .title {
-  color: #fff;
-  padding: 20px;
-  font-size: 1.3rem;
-  font-weight: bold;
-}
-.sidebar a {
-  color: #d1d5db;
-  padding: 12px 20px;
-  display: block;
-  text-decoration: none;
-}
-.sidebar a:hover {
-  background: #374151;
-  color: #fff;
 }
 
 .table {
